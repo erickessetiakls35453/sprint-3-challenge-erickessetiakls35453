@@ -59,7 +59,55 @@
       // ❗ WARNING: except for `getAllReversed`, methods must respect the order of the integers
       // ❗ WARNING: note that none of the methods actually mutate the `ints` property
 
+      
+    constructor(...args) {
+        this.ints = args; // Store all integers passed as arguments in an array
     }
+
+    getAll() {
+        return this.ints; // Return all integers in the original order
+    }
+
+    getEvens() {
+        return this.ints.filter(num => num % 2 === 0); // Return only the even integers
+    }
+
+    getNegatives() {
+        return this.ints.filter(num => num < 0); // Return only the negative integers
+    }
+
+    getAllSquared() {
+        return this.ints.map(num => num ** 2); // Return an array with squared integers
+    }
+
+    pop() {
+        return this.ints.pop(); // Remove and return the last integer
+    }
+
+    push(newValue) {
+        this.ints.push(newValue); // Add a new integer to the end
+        return this.ints; // Return the updated array
+    }
+
+    getEveryNth(n) {
+        return this.ints.filter((_, index) => index % n === 0); // Return integers at every nth position
+    }
+
+    getAllReversed() {
+        return this.ints.slice().reverse(); // Return all integers in reverse order
+    }
+}
+
+// Example Usage
+const integersInstance = new Integers(1, 2, 3, 4, 5, -1, -2, -3, 6, 8);
+console.log(integersInstance.getAll());
+console.log(integersInstance.getEvens());
+console.log(integersInstance.getNegatives());
+console.log(integersInstance.getAllSquared());
+console.log(integersInstance.pop());
+console.log(integersInstance.push(10));
+console.log(integersInstance.getEveryNth(2));
+console.log(integersInstance.getAllReversed());
 
     // 👉 CHALLENGE 2 NerfGun
     class NerfGun {
@@ -77,7 +125,48 @@
       //      * When disengaging the safety, return "Safety disabled!"
       // 🌟 HINT: instances need to keep track of their maximum capacity as well as their current capacity
 
+      
+      constructor(totalProjectiles){ 
+
+      
+       
+     
+        this.maxCapacity = totalProjectiles;
+        this.currentCapacity = totalProjectiles;
+        this.safetyOn = true;
     }
+
+    shoot() {
+        if (this.currentCapacity > 0 && !this.safetyOn) {
+            this.currentCapacity--;
+            return "Bang!";
+        } else {
+            return "Click!";
+        }
+    }
+
+    reload(count) {
+        if (typeof count !== 'number' || count <= 0) {
+            return "Error reloading!";
+        }
+        this.currentCapacity = Math.min(this.maxCapacity, this.currentCapacity + count);
+        return `${this.currentCapacity} projectiles left!`;
+    }
+
+    toggleSafety() {
+        this.safetyOn = !this.safetyOn;
+        return this.safetyOn ? "Safety enabled!" : "Safety disabled!";
+    }
+}
+
+// Example Usage
+const nerfGunInstance = new NerfGun(10);
+console.log(nerfGunInstance.shoot());
+console.log(nerfGunInstance.reload(5));
+console.log(nerfGunInstance.toggleSafety());
+console.log(nerfGunInstance.shoot());
+console.log(nerfGunInstance.toggleSafety());
+
 
     // 👉 CHALLENGE 3 EBook
     class EBook {
@@ -95,11 +184,42 @@
       //    ebook.next() // returns null
       // 🌟 HINT: remember about the `slice` method which strings and arrays have
       // ❗ Feel free to implement `back`, although this is not required nor graded
+    
+      
+  constructor(text, charsPerPage) {
+    this.text = text;
+    this.charsPerPage = charsPerPage;
+    this.currentPageIndex = 0;
+  }
 
-    }
+  next() {
+    // If we have reached the end, return null
+    if (this.currentPageIndex >= this.text.length) return null;
+
+    // Calculate the end index for the current page slice
+    const nextPageIndex = this.currentPageIndex + this.charsPerPage;
+    
+    // Get the next page slice of text
+    const pageText = this.text.slice(this.currentPageIndex, nextPageIndex);
+    
+    // Update the current page index for subsequent calls
+    this.currentPageIndex = nextPageIndex;
+
+    return pageText;
+  }
+
+  // Implementing the back method (optional)
+  back() {
+    // If we are at the beginning, there is
+  }
+}
+    
+    
+
+
 
     // 👉 CHALLENGE 4 AntFarm
-    class AntFarm {
+     class AntFarm{
       // 🧠 Constructor takes **any** number of arguments, which are strings: the names of your ants
       // 🧠 Instances of AntFarm have an `ants` property holding an array of ants:
       //      * Each ant is an object with a `name` prop and a `health` prop that starts at 100
@@ -131,7 +251,72 @@
       // 👉 HINT: if you are not feeling confident with map and filter, solve the problem with for loops,
       //      and with the piece of mind of all tests passing, refactor to use map/filter
 
+      
+  constructor(...antNames) {
+    this.ants = antNames.map(name => ({ name, health: 100 }));
+  }
+
+  work() {
+    if (this.ants.length === 0) {
+      return "No ants here. Did you work them to death?";
     }
+
+    const message = `${this.ants.length} ants starting work!`;
+    this.ants.forEach(ant => {
+      ant.health -= 20;
+      if (ant.health <= 0) {
+        this.removeDeadAnt(ant);
+      }
+    });
+
+    return message;
+  }
+
+  feed(antName) {
+    const ant = this.findAntByName(antName);
+
+    if (ant) {
+      ant.health += 15;
+      return "Yum!";
+    } else {
+      return `${antName} not found!`;
+    }
+  }
+
+  removeDeadAnt(deadAnt) {
+    this.ants = this.ants.filter(ant => ant !== deadAnt);
+  }
+
+  findAntByName(antName) {
+    return this.ants.find(ant => ant.name === antName);
+  }
+}
+
+// Example usage:
+const antFarm = new AntFarm("Ant1", "Ant2", "Ant3");
+console.log(antFarm.work()); // Output: "3 ants starting work!"
+console.log(antFarm.feed("Ant2")); // Output: "Yum!"
+console.log(antFarm.work()); // Output: "2 ants starting work!"
+console.log(antFarm.feed("Ant4")); // Output: "Ant4 not found!"
+
+
+
+
+
+
+
+  
+
+
+      
+
+
+
+
+
+
+
+  
 
     // 🧪 TESTS, do not make any changes below this line ===================
     // 🧪 TESTS, do not make any changes below this line ===================
