@@ -250,7 +250,8 @@ console.log(nerfGunInstance.toggleSafety());
       //      console.log(list) // prints ["a"]
       // 👉 HINT: if you are not feeling confident with map and filter, solve the problem with for loops,
       //      and with the piece of mind of all tests passing, refactor to use map/filter
-
+      
+      
       
   constructor(...antNames) {
     this.ants = antNames.map(name => ({ name, health: 100 }));
@@ -260,54 +261,41 @@ console.log(nerfGunInstance.toggleSafety());
     if (this.ants.length === 0) {
       return "No ants here. Did you work them to death?";
     }
-
-    const message = `${this.ants.length} ants starting work!`;
-    this.ants.forEach(ant => {
-      ant.health -= 20;
-      if (ant.health <= 0) {
-        this.removeDeadAnt(ant);
+const length = this.ants.length;
+    for (let i = 0; i < this.ants.length; i++) {
+      this.ants[i].health -= 20;
+      if (this.ants[i].health <= 0) {
+        this.ants.splice(i, 1);
+        i--;
       }
-    });
-
-    return message;
-  }
-
-  feed(antName) {
-    const ant = this.findAntByName(antName);
-
-    if (ant) {
-      ant.health += 15;
-      return "Yum!";
-    } else {
-      return `${antName} not found!`;
     }
+
+    return `${length} ants starting work!`;
   }
 
-  removeDeadAnt(deadAnt) {
-    this.ants = this.ants.filter(ant => ant !== deadAnt);
-  }
+  feed(name) {
+    let found = false;
 
-  findAntByName(antName) {
-    return this.ants.find(ant => ant.name === antName);
+    for (let i = 0; i < this.ants.length; i++) {
+      if (this.ants[i].name === name) {
+        this.ants[i].health += 15;
+        found = true;
+      }
+    }
+
+    return found ? "Yum!" : `${name} not found!`;
   }
 }
-
-// Example usage:
-const antFarm = new AntFarm("Ant1", "Ant2", "Ant3");
-console.log(antFarm.work()); // Output: "3 ants starting work!"
-console.log(antFarm.feed("Ant2")); // Output: "Yum!"
-console.log(antFarm.work()); // Output: "2 ants starting work!"
-console.log(antFarm.feed("Ant4")); // Output: "Ant4 not found!"
-
-
-
-
-
-
+  
 
   
 
-
+  const farm = new AntFarm('Jess', 'Blake');
+      //      farm.ants;         // evaluates to [{name: 'Jess', health: 100}, {name: 'Blake', health: 100}]
+      //      farm.work();       // returns "2 ants starting work!"
+      //      farm.ants;         // evaluates to [{name: 'Jess', health: 80}, {name: 'Blake', health: 80}]
+      //      farm.feed('Jess'); // returns "Yum!"
+      //      farm.ants;         // evaluates to [{name: 'Jess', health: 95}, {name: 'Blake', health: 80}]
       
 
 
